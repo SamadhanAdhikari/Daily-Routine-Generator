@@ -11,8 +11,8 @@ class MainWindow(QWidget):
         self.read_time = QLineEdit(self)
         self.read_duration = QLineEdit(self)
         self.HEADER = QLabel("DAILY ROUTINE GENERATOR", self)
-        self.submit_button = QPushButton("Submit Tasks", self)
-        self.instruction = QLabel("Enter Your routine", self)
+        self.submit_button = QPushButton("Submit Tasks:", self)
+        self.instruction = QLabel("Enter Your routine: Please Enter Chronologically", self)
         self.routine_button = QPushButton("Get Routine", self)
         self.initUI()
 
@@ -170,7 +170,7 @@ class ResultWindow(QWidget):
         self.table.setColumnWidth(1, 260)
         self.table.setColumnWidth(2, 260)
 
-        self.populate_table()
+        self.make_table()
         
         self.setStyleSheet("""
             QWidget {
@@ -215,13 +215,15 @@ class ResultWindow(QWidget):
             }
         """)
 
-    def populate_table(self):
+    def make_table(self):
         self.table.setRowCount(len(self.tasks))
         
         for index, task in enumerate(self.tasks):
             self.table.setItem(index, 0, QTableWidgetItem(task["task"]))
             self.table.setItem(index, 1, QTableWidgetItem(task["time"]))
             self.table.setItem(index, 2, QTableWidgetItem(task["duration"]))
+
+            self.table.setRowHeight(index, 50)
 
 def main():
     app = QApplication(sys.argv)
