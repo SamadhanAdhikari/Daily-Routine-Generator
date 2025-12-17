@@ -179,7 +179,7 @@ Contributions are welcome! Here's how you can help:
 
 ## Author
 
-**Your Name**
+**Samadhan Adhikari**
 - GitHub: [SamadhanAdhikari](https://github.com/SamadhanAdhikari)
 - Email: adhikarisamadhan@gmail.com
 
