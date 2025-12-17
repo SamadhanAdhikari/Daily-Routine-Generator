@@ -83,6 +83,18 @@ class MainWindow(QWidget):
         vbox.addWidget(self.submit_button)
         self.setLayout(vbox)
 
+        self.submit_button.clicked.connect(self.get_tasks)
+
+    def get_tasks(self):
+
+        task = self.read_task.text()
+        time = self.read_time.text()
+        duration = self.read_duration.text()
+
+        if self.read_task.text() != "" and self.read_time.text() != "" and self.read_duration.text() != "":
+            self.daily_tasks.append({task, time, duration})
+        print(self.daily_tasks)
+
 def main():
     app = QApplication(sys.argv)
     window = MainWindow()
