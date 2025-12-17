@@ -192,17 +192,11 @@ class ResultWindow(QWidget):
                 background-color: #393E46;
                 gridline-color: #00ADB5;
                 font-size: 18px;
-                border-radius: 10px;
             }
 
             QTableWidget#routine_table::item {
                 padding: 10px;
                 color: #EBD5AB;
-            }
-
-            QTableWidget#routine_table::item:selected {
-                background-color: #00ADB5;
-                color: #222831;
             }
 
             QHeaderView::section {
