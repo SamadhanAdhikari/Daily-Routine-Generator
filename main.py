@@ -11,6 +11,7 @@ class MainWindow(QWidget):
         self.read_duration = QLineEdit(self)
         self.HEADER = QLabel("DAILY ROUTINE GENERATOR", self)
         self.submit_button = QPushButton("Submit", self)
+        self.instruction = QLabel("Enter Your routine", self)
         self.initUI()
 
     def initUI(self):
@@ -24,6 +25,7 @@ class MainWindow(QWidget):
         self.read_task.setObjectName("read_task")
         self.read_time.setObjectName("read_time")
         self.read_duration.setObjectName("read_duration")
+        self.instruction.setObjectName("instruction")
         self.submit_button.setObjectName("submit_button")
 
         self.setStyleSheet("""
@@ -36,14 +38,14 @@ class MainWindow(QWidget):
                            font-family: Bold Font;
                            font-weight: Bold;
                            background-color: #393E46;
-                           padding: 30px;
+                           padding: 20px;
                            border-radius: 20px;
-                           margin-bottom: 100px;
+                           margin-bottom: 10px;
                            color: #EBD5AB;
                            }
 
             QLineEdit#read_task {
-                           padding: 25px;
+                           padding: 15px;
                            border-radius: 15px;
                            font-size: 25px;
                            margin-bottom: 15px;
@@ -51,7 +53,7 @@ class MainWindow(QWidget):
                            }
 
             QLineEdit#read_time {
-                           padding: 25px;
+                           padding: 15px;
                            border-radius: 15px;
                            font-size: 25px;
                            margin-bottom: 15px;
@@ -59,7 +61,7 @@ class MainWindow(QWidget):
                            }
 
             QLineEdit#read_duration {
-                           padding: 25px;
+                           padding: 15px;
                            border-radius: 15px;
                            font-size: 25px;
                            margin-bottom: 25px;
@@ -67,16 +69,24 @@ class MainWindow(QWidget):
                            }
 
             QPushButton#submit_button {
-                           padding: 25px;
+                           padding: 15px;
                            background-color: whitesmoke;
                            border-radius: 25px;
                            font-size: 40px;
                            font-family: Times New Roman;
                            }
+
+            QLabel#instruction {
+                           margin-bottom: 10px;
+                           color: #EBD5AB;
+                           font-family: Calibri;
+                           font-size: 30px;
+                           }
         """)
         
         vbox = QVBoxLayout()
         vbox.addWidget(self.HEADER, alignment = Qt.AlignmentFlag.AlignCenter)
+        vbox.addWidget(self.instruction, alignment= Qt.AlignmentFlag.AlignCenter)
         vbox.addWidget(self.read_task)
         vbox.addWidget(self.read_time)
         vbox.addWidget(self.read_duration)
@@ -93,6 +103,8 @@ class MainWindow(QWidget):
 
         if self.read_task.text() != "" and self.read_time.text() != "" and self.read_duration.text() != "":
             self.daily_tasks.append({task, time, duration})
+        else:
+            self.instruction.setText("Error : Enter all the fields before submitting")
         print(self.daily_tasks)
 
 def main():
