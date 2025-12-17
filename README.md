@@ -177,10 +177,6 @@ Contributions are welcome! Here's how you can help:
 - Check that QLineEdit has background-color set in stylesheet
 - Verify color contrast between background and text
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
 ## Author
 
 **Your Name**
