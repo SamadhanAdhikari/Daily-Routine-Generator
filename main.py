@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QWidget, QApplication, QTableWidget, QLineEdit, QLabel, QVBoxLayout, QPushButton
+from PyQt6.QtWidgets import QWidget, QApplication, QTableWidget, QLineEdit, QLabel, QVBoxLayout, QPushButton, QTableWidgetItem
 from PyQt6.QtCore import Qt
 
 class MainWindow(QWidget):
@@ -10,8 +10,9 @@ class MainWindow(QWidget):
         self.read_time = QLineEdit(self)
         self.read_duration = QLineEdit(self)
         self.HEADER = QLabel("DAILY ROUTINE GENERATOR", self)
-        self.submit_button = QPushButton("Submit", self)
+        self.submit_button = QPushButton("Submit Tasks", self)
         self.instruction = QLabel("Enter Your routine", self)
+        self.routine_button = QPushButton("Get Routine", self)
         self.initUI()
 
     def initUI(self):
@@ -27,6 +28,8 @@ class MainWindow(QWidget):
         self.read_duration.setObjectName("read_duration")
         self.instruction.setObjectName("instruction")
         self.submit_button.setObjectName("submit_button")
+        self.routine_button.setObjectName("routine_button")
+        self.result_window = None
 
         self.setStyleSheet("""
             MainWindow {
@@ -82,6 +85,17 @@ class MainWindow(QWidget):
                            font-family: Calibri;
                            font-size: 30px;
                            }
+
+            QPushButton#routine_button {
+                padding: 20px;
+                margin-top: 10px;
+                background-color: #393E46;
+                color: #EBD5AB;
+                font-family: Calibri;
+                font-size: 30px;
+                border-radius: 15px;
+                font-weight: Bold;
+            }
         """)
         
         vbox = QVBoxLayout()
@@ -91,9 +105,11 @@ class MainWindow(QWidget):
         vbox.addWidget(self.read_time)
         vbox.addWidget(self.read_duration)
         vbox.addWidget(self.submit_button)
+        vbox.addWidget(self.routine_button)
         self.setLayout(vbox)
 
         self.submit_button.clicked.connect(self.get_tasks)
+        self.routine_button.clicked.connect(self.show_ResultWindow)
 
     def get_tasks(self):
 
@@ -103,9 +119,26 @@ class MainWindow(QWidget):
 
         if self.read_task.text() != "" and self.read_time.text() != "" and self.read_duration.text() != "":
             self.daily_tasks.append({task, time, duration})
+            self.read_task.clear()
+            self.read_time.clear()
+            self.read_duration.clear()
         else:
             self.instruction.setText("Error : Enter all the fields before submitting")
         print(self.daily_tasks)
+
+    def show_ResultWindow(self):
+        if self.result_window is None:
+            self.result_window = ResultWindow(self.daily_tasks)
+        else:
+            self.result_window.update_tasks(self.daily_tasks)
+        self.result_window.show()
+
+class ResultWindow(QWidget):
+    def __init__(self, tasks):
+        super().__init__()
+        self.HEADER = QLabel("RESULT", self)
+
+
 
 def main():
     app = QApplication(sys.argv)
