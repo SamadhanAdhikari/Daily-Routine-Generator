@@ -153,19 +153,22 @@ class ResultWindow(QWidget):
 
     def initUI(self):
         self.setWindowTitle("Daily Routine")
-        self.move(300, 30)
-        self.resize(800, 600)
+        self.setGeometry(300, 30, 800, 600)
 
         self.HEADER.setObjectName("HEADER")
         self.table.setObjectName("routine_table")
+
+        vbox = QVBoxLayout()
+        vbox.addWidget(self.HEADER, alignment=Qt.AlignmentFlag.AlignCenter)
+        vbox.addWidget(self.table)
+        self.setLayout(vbox)
         
-        # Set table structure
-        self.table.setColumnCount(3)  # Added this line
+        self.table.setColumnCount(3) 
         self.table.setHorizontalHeaderLabels(["Task", "Time", "Duration"])
 
-        self.table.setColumnWidth(0, 250)
-        self.table.setColumnWidth(1, 200)
-        self.table.setColumnWidth(2, 200)
+        self.table.setColumnWidth(0, 260)
+        self.table.setColumnWidth(1, 260)
+        self.table.setColumnWidth(2, 260)
 
         self.populate_table()
         
@@ -211,23 +214,14 @@ class ResultWindow(QWidget):
                 border: none;
             }
         """)
-        
-        vbox = QVBoxLayout()  # Added parentheses
-        vbox.addWidget(self.HEADER, alignment=Qt.AlignmentFlag.AlignCenter)
-        vbox.addWidget(self.table)
-        self.setLayout(vbox)
 
     def populate_table(self):
         self.table.setRowCount(len(self.tasks))
         
-        for row, task_dict in enumerate(self.tasks):
-            self.table.setItem(row, 0, QTableWidgetItem(task_dict["task"]))
-            self.table.setItem(row, 1, QTableWidgetItem(task_dict["time"]))
-            self.table.setItem(row, 2, QTableWidgetItem(task_dict["duration"]))
-
-    def update_tasks(self, tasks):
-        self.tasks = tasks
-        self.populate_table()
+        for index, task in enumerate(self.tasks):
+            self.table.setItem(index, 0, QTableWidgetItem(task["task"]))
+            self.table.setItem(index, 1, QTableWidgetItem(task["time"]))
+            self.table.setItem(index, 2, QTableWidgetItem(task["duration"]))
 
 def main():
     app = QApplication(sys.argv)
