@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QWidget, QApplication, QTableWidget, QLineEdit, QLabel, QVBoxLayout, QPushButton, QTableWidgetItem
+from PyQt6.QtWidgets import QWidget, QApplication, QTableWidget, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidgetItem, QComboBox
 from PyQt6.QtCore import Qt
 
 class MainWindow(QWidget):
@@ -9,18 +9,23 @@ class MainWindow(QWidget):
         self.result_window = None
         self.read_task = QLineEdit(self)
         self.read_time = QLineEdit(self)
+        self.read_minutes = QLineEdit(self)
         self.read_duration = QLineEdit(self)
         self.HEADER = QLabel("DAILY ROUTINE GENERATOR", self)
         self.submit_button = QPushButton("Submit Tasks:", self)
         self.instruction = QLabel("Enter Your routine: Please Enter Chronologically", self)
         self.routine_button = QPushButton("Get Routine", self)
+        self.AP_selection = QComboBox()
+
         self.initUI()
 
     def initUI(self):
         self.setWindowTitle("Daily Routine Generator")
         self.move(300, 30)
         self.read_task.setPlaceholderText("Enter Task (eg. Do Math Homework)")
-        self.read_time.setPlaceholderText("Enter Time of the day to start the Task (eg. 4 PM)")
+        self.read_time.setPlaceholderText("Enter Time (eg. 4)")
+        self.read_minutes.setPlaceholderText("Enter Minutes (eg. 30)")
+        self.AP_selection.addItems(['AM', 'PM'])
         self.read_duration.setPlaceholderText("Enter Duration of Task (eg. 2 Hours)")
 
         self.HEADER.setObjectName("HEADER")
@@ -30,6 +35,8 @@ class MainWindow(QWidget):
         self.instruction.setObjectName("instruction")
         self.submit_button.setObjectName("submit_button")
         self.routine_button.setObjectName("routine_button")
+        self.read_minutes.setObjectName("read_minutes")
+        self.AP_selection.setObjectName("AP_selection")
 
         self.setStyleSheet("""
             QWidget {
@@ -64,6 +71,35 @@ class MainWindow(QWidget):
                 background-color: #00ADB5;
                 color: #222831;
             }
+                           
+            QLineEdit#read_minutes {
+                padding: 15px;
+                border-radius: 15px;
+                font-size: 25px;
+                margin-bottom: 25px;
+                margin-top: 10px;
+                background-color: #00ADB5;
+                color: #222831;
+            }
+                           
+            QComboBox#AP_selection {
+                padding: 15px;
+                border-radius: 15px;
+                font-size: 25px;
+                margin-bottom: 25px;
+                margin-top: 10px;
+                background-color: #00ADB5;
+                color: #222831;
+            }
+                           
+            QComboBox#AP_selection::drop-down {
+                           border: 15px;
+                           }
+
+            QComboBox#AP_selection  QAbstractItemView {
+                           background-color: #00ADB5;
+                           color: #222831;
+                           }
 
             QLineEdit#read_duration {
                 padding: 15px;
@@ -109,11 +145,16 @@ class MainWindow(QWidget):
             }
         """)
         
+        hbox = QHBoxLayout()
+        hbox.addWidget(self.read_time)
+        hbox.addWidget(self.read_minutes)
+        hbox.addWidget(self.AP_selection)
+
         vbox = QVBoxLayout()
         vbox.addWidget(self.HEADER, alignment = Qt.AlignmentFlag.AlignCenter)
         vbox.addWidget(self.instruction, alignment= Qt.AlignmentFlag.AlignCenter)
         vbox.addWidget(self.read_task)
-        vbox.addWidget(self.read_time)
+        vbox.addLayout(hbox)
         vbox.addWidget(self.read_duration)
         vbox.addWidget(self.submit_button)
         vbox.addWidget(self.routine_button)
@@ -125,22 +166,24 @@ class MainWindow(QWidget):
     def get_tasks(self):
         task = self.read_task.text()
         time = self.read_time.text()
+        minutes = self.read_minutes.text()
+        AP = self.AP_selection.currentText()
         duration = self.read_duration.text()
 
         if task != "" and time != "" and duration != "":
-            self.daily_tasks.append({"task": task, "time": time, "duration": duration})
+            self.daily_tasks.append({"task" : task, "time" : time, "minutes" : minutes, "AP" : AP, "duration" : duration})
             self.read_task.clear()
             self.read_time.clear()
+            self.read_minutes.clear()
             self.read_duration.clear()
         else:
             self.instruction.setText("Error : Enter all the fields before submitting")
-        print(self.daily_tasks)
 
     def show_ResultWindow(self):
         if self.result_window is None:
             self.result_window = ResultWindow(self.daily_tasks)
         else:
-            self.result_window.update_tasks(self.daily_tasks)
+            self.result_window(self.daily_tasks)
         self.result_window.show()
 
 class ResultWindow(QWidget):
@@ -214,7 +257,7 @@ class ResultWindow(QWidget):
         
         for index, task in enumerate(self.tasks):
             self.table.setItem(index, 0, QTableWidgetItem(task["task"]))
-            self.table.setItem(index, 1, QTableWidgetItem(task["time"]))
+            self.table.setItem(index, 1, QTableWidgetItem(f"{task['time']} : {task['minutes']} {task['AP']}"))
             self.table.setItem(index, 2, QTableWidgetItem(task["duration"]))
 
             self.table.setRowHeight(index, 50)
