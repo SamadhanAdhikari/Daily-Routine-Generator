@@ -13,7 +13,7 @@ class MainWindow(QWidget):
         self.read_duration = QLineEdit(self)
         self.HEADER = QLabel("DAILY ROUTINE GENERATOR", self)
         self.submit_button = QPushButton("Submit Tasks:", self)
-        self.instruction = QLabel("Enter Your routine: Please Enter Chronologically", self)
+        self.instruction = QLabel("Enter Your routine", self)
         self.routine_button = QPushButton("Get Routine", self)
         self.AP_selection = QComboBox()
 
@@ -23,7 +23,7 @@ class MainWindow(QWidget):
         self.setWindowTitle("Daily Routine Generator")
         self.move(300, 30)
         self.read_task.setPlaceholderText("Enter Task (eg. Do Math Homework)")
-        self.read_time.setPlaceholderText("Enter Time (eg. 4)")
+        self.read_time.setPlaceholderText("Enter Hour (eg. 4)")
         self.read_minutes.setPlaceholderText("Enter Minutes (eg. 30)")
         self.AP_selection.addItems(['AM', 'PM'])
         self.read_duration.setPlaceholderText("Enter Duration of Task (eg. 2 Hours)")
@@ -164,18 +164,17 @@ class MainWindow(QWidget):
         self.routine_button.clicked.connect(self.show_ResultWindow)
 
     def get_tasks(self):
-        task = self.read_task.text()
-        time = self.read_time.text()
-        minutes = self.read_minutes.text()
-        AP = self.AP_selection.currentText()
-        duration = self.read_duration.text()
-
-        if task != "" and time != "" and duration != "":
-            self.daily_tasks.append({"task" : task, "time" : time, "minutes" : minutes, "AP" : AP, "duration" : duration})
+        if self.read_task.text() and self.read_time.text() and self.read_duration.text():
+            self.daily_tasks.append({"task" : self.read_task.text(),
+                                    "time" : self.read_time.text(),
+                                    "minutes" : self.read_minutes.text(),
+                                    "AP" : self.AP_selection.currentText(),
+                                    "duration" : self.read_duration.text()})
             self.read_task.clear()
             self.read_time.clear()
             self.read_minutes.clear()
             self.read_duration.clear()
+            print(self.daily_tasks)
         else:
             self.instruction.setText("Error : Enter all the fields before submitting")
 
@@ -252,7 +251,22 @@ class ResultWindow(QWidget):
             }
         """)
 
+    def sort_by_time(self):
+        def time_conversion(task):
+            hours = int(task['time'])
+            ap = task['AP']
+
+            if ap == 'PM':
+                hours += 12
+            elif ap == 'AM':
+                pass
+            return hours
+
+        self.tasks.sort(key = time_conversion)
+
     def make_table(self):
+        self.sort_by_time()
+
         self.table.setRowCount(len(self.tasks))
         
         for index, task in enumerate(self.tasks):
