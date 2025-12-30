@@ -84,6 +84,7 @@ class MainWindow(QWidget):
                            
             QComboBox#AP_selection {
                 padding: 15px;
+                padding-right: 40px;
                 border-radius: 15px;
                 font-size: 25px;
                 margin-bottom: 25px;
@@ -93,7 +94,16 @@ class MainWindow(QWidget):
             }
                            
             QComboBox#AP_selection::drop-down {
-                           border: 15px;
+                           border: none;
+                           width: 30px;
+                           }
+
+            QComboBox#AP_selection::down-arrow {
+                           image: none;
+                           border: none;
+                           border-left: 5px solid;
+                           border-right: 5px solid;
+                           border-top: 8px solid #222831;
                            }
 
             QComboBox#AP_selection  QAbstractItemView {
