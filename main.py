@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QWidget, QApplication, QTableWidget, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidgetItem, QComboBox
+from PyQt6.QtWidgets import QWidget, QApplication, QTableWidget, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QTableWidgetItem, QComboBox, QMessageBox
 from PyQt6.QtCore import Qt
 
 class MainWindow(QWidget):
@@ -173,18 +173,29 @@ class MainWindow(QWidget):
         self.submit_button.clicked.connect(self.get_tasks)
         self.routine_button.clicked.connect(self.show_ResultWindow)
 
+    def Confirmation(self,):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Icon.Question)
+        msg.setWindowTitle("Confirmation")
+        msg.setText(f"Are you sure you want to sumbit:\nTask: {self.read_task.text()}\nTime: {self.read_time.text()}:{self.read_minutes.text()} {self.AP_selection.currentText()}\nDuration: {self.read_duration.text()}")
+        msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        return msg.exec()
+
     def get_tasks(self):
         if self.read_task.text() and self.read_time.text() and self.read_duration.text():
-            self.daily_tasks.append({"task" : self.read_task.text(),
-                                    "time" : self.read_time.text(),
-                                    "minutes" : self.read_minutes.text(),
-                                    "AP" : self.AP_selection.currentText(),
-                                    "duration" : self.read_duration.text()})
-            self.read_task.clear()
-            self.read_time.clear()
-            self.read_minutes.clear()
-            self.read_duration.clear()
-            print(self.daily_tasks)
+            choice = self.Confirmation()
+            if choice == 16384:
+                self.daily_tasks.append({"task" : self.read_task.text(),
+                                        "time" : self.read_time.text(),
+                                        "minutes" : self.read_minutes.text(),
+                                        "AP" : self.AP_selection.currentText(),
+                                        "duration" : self.read_duration.text()})
+                self.read_task.clear()
+                self.read_time.clear()
+                self.read_minutes.clear()
+                self.read_duration.clear()
+            else:
+                pass
         else:
             self.instruction.setText("Error : Enter all the fields before submitting")
 
