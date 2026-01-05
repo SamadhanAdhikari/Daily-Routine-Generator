@@ -300,11 +300,8 @@ class ResultWindow(QWidget):
 
             self.table.setRowHeight(index, 50)
 
-def main():
+if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
-
-if __name__ == "__main__":
-    main()
