@@ -182,20 +182,23 @@ class MainWindow(QWidget):
         return msg.exec()
 
     def get_tasks(self):
-        if self.read_task.text() and self.read_time.text() and self.read_duration.text():
-            choice = self.Confirmation()
-            if choice == 16384:
-                self.daily_tasks.append({"task" : self.read_task.text(),
-                                        "time" : self.read_time.text(),
-                                        "minutes" : self.read_minutes.text(),
-                                        "AP" : self.AP_selection.currentText(),
-                                        "duration" : self.read_duration.text()})
-                self.read_task.clear()
-                self.read_time.clear()
-                self.read_minutes.clear()
-                self.read_duration.clear()
+        if self.read_task.text() and self.read_time.text() and self.read_minutes.text and self.AP_selection.currentText and self.read_duration.text():
+            if int(self.read_time.text()) > 12:
+                self.instruction.setText("Time error: Please use 12 hour clock.")
+            elif int(self.read_minutes.text()) > 59:
+                self.instruction.setText("Time error: enter minutes upto 59")
             else:
-                pass
+                choice = self.Confirmation()
+                if choice == 16384:
+                    self.daily_tasks.append({"task" : self.read_task.text(),
+                                            "time" : self.read_time.text(),
+                                            "minutes" : self.read_minutes.text(),
+                                            "AP" : self.AP_selection.currentText(),
+                                            "duration" : self.read_duration.text()})
+                    self.read_task.clear()
+                    self.read_time.clear()
+                    self.read_minutes.clear()
+                    self.read_duration.clear()
         else:
             self.instruction.setText("Error : Enter all the fields before submitting")
 
