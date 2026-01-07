@@ -6,7 +6,6 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.daily_tasks = []
-        self.result_window = None
         self.read_task = QLineEdit(self)
         self.read_time = QLineEdit(self)
         self.read_minutes = QLineEdit(self)
@@ -190,11 +189,7 @@ class MainWindow(QWidget):
             else:
                 choice = self.Confirmation()
                 if choice == 16384:
-                    self.daily_tasks.append({"task" : self.read_task.text(),
-                                            "time" : self.read_time.text(),
-                                            "minutes" : self.read_minutes.text(),
-                                            "AP" : self.AP_selection.currentText(),
-                                            "duration" : self.read_duration.text()})
+                    self.daily_tasks.append({"task" : self.read_task.text(), "time" : self.read_time.text(), "minutes" : self.read_minutes.text(), "AP" : self.AP_selection.currentText(), "duration" : self.read_duration.text()})
                     self.read_task.clear()
                     self.read_time.clear()
                     self.read_minutes.clear()
@@ -203,10 +198,7 @@ class MainWindow(QWidget):
             self.instruction.setText("Error : Enter all the fields before submitting")
 
     def show_ResultWindow(self):
-        if self.result_window is None:
-            self.result_window = ResultWindow(self.daily_tasks)
-        else:
-            self.result_window(self.daily_tasks)
+        self.result_window = ResultWindow(self.daily_tasks)
         self.result_window.show()
 
 class ResultWindow(QWidget):
