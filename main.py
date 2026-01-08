@@ -21,7 +21,7 @@ class MainWindow(QWidget):
     def initUI(self):
         self.setWindowTitle("Daily Routine Generator")
         self.move(300, 30)
-        self.read_task.setPlaceholderText("Enter Task (eg. Do Math Homework)")
+        self.read_task.setPlaceholderText("Enter Task (eg. Do ______________ task)")
         self.read_time.setPlaceholderText("Enter Hour (eg. 4)")
         self.read_minutes.setPlaceholderText("Enter Minutes (eg. 30)")
         self.AP_selection.addItems(['AM', 'PM'])
@@ -181,11 +181,13 @@ class MainWindow(QWidget):
         return msg.exec()
 
     def get_tasks(self):
-        if self.read_task.text() and self.read_time.text() and self.read_minutes.text and self.AP_selection.currentText and self.read_duration.text():
+        if self.read_task.text() and self.read_time.text() and self.read_minutes.text() and self.AP_selection.currentText and self.read_duration.text():
             if int(self.read_time.text()) > 12:
                 self.instruction.setText("Time error: Please use 12 hour clock.")
             elif int(self.read_minutes.text()) > 59:
-                self.instruction.setText("Time error: enter minutes upto 59")
+                self.instruction.setText("Time error: Minutes is greater than 59 minutes")
+            elif int(self.read_duration.text()) > 24:
+                self.instruction.setText("Time error: Duration is greater than 24 hours.")
             else:
                 choice = self.Confirmation()
                 if choice == 16384:
