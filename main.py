@@ -198,7 +198,11 @@ class MainWindow(QWidget):
         if Validity == "Valid":
             choice = self.Confirmation()
             if choice == 16384:
-                self.daily_tasks.append({"task" : self.read_task.text(), "time" : self.read_time.text(), "minutes" : self.read_minutes.text(), "AP" : self.AP_selection.currentText(), "duration" : self.read_duration.text()})
+                self.daily_tasks.append({"task" : self.read_task.text(),
+                                        "time" : self.read_time.text(),
+                                        "minutes" : self.read_minutes.text(),
+                                        "AP" : self.AP_selection.currentText(),
+                                        "duration" : self.read_duration.text()})
                 self.read_task.clear()
                 self.read_time.clear()
                 self.read_minutes.clear()
@@ -214,6 +218,7 @@ class ResultWindow(QWidget):
         self.tasks = tasks
         self.HEADER = QLabel("DAILY ROUTINE", self)
         self.table = QTableWidget()
+        self.instruction = QLabel("Double click on boxes to edit routine.")
         self.initUI()
 
     def initUI(self):
@@ -222,9 +227,11 @@ class ResultWindow(QWidget):
 
         self.HEADER.setObjectName("HEADER")
         self.table.setObjectName("routine_table")
+        self.instruction.setObjectName("instruction")
 
         vbox = QVBoxLayout()
         vbox.addWidget(self.HEADER, alignment=Qt.AlignmentFlag.AlignCenter)
+        vbox.addWidget(self.instruction, alignment=Qt.AlignmentFlag.AlignCenter)
         vbox.addWidget(self.table)
         self.setLayout(vbox)
         
@@ -271,6 +278,13 @@ class ResultWindow(QWidget):
                 font-weight: bold;
                 font-size: 20px;
                 border: none;
+            }
+
+            QLabel#instruction {
+                margin-bottom: 10px;
+                color: #EBD5AB;
+                font-family: Calibri;
+                font-size: 20px;
             }
         """)
 
