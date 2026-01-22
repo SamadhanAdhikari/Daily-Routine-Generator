@@ -181,18 +181,37 @@ class MainWindow(QWidget):
         return msg.exec()
     
     def Input_Validation(self):
-        if self.read_task.text() and self.read_time.text() and self.read_minutes.text() and self.AP_selection.currentText and self.read_duration.text():
-            if int(self.read_time.text()) > 12:
-                self.instruction.setText("Time error: Please use 12 hour clock.")
-            elif int(self.read_minutes.text()) > 59:
-                self.instruction.setText("Time error: Minutes is greater than 59 minutes")
-            elif int(self.read_duration.text()) > 24:
-                self.instruction.setText("Time error: Duration is greater than 24 hours.")
-            else:
-                return "Valid"
-        else:
-            self.instruction.setText("Error : Enter all the fields before submitting")
+        if not (self.read_task.text() and self.read_time.text() and self.read_minutes.text() and self.read_duration.text()):
+            self.instruction.setText("Error: Enter all the fields before submitting")
+            return None
+        
+        try:
+            hour = int(self.read_time.text())
+            minutes = int(self.read_minutes.text())
+            duration = int(self.read_duration.text())
+        except ValueError:
+            self.instruction.setText("Error: Time, minute and duration must be numeric values")
+            return None
 
+        if hour < 1:
+            self.instruction.setText("Time error: Hour cannot be negative or zero")
+            return None
+        if hour > 12:
+            self.instruction.setText("Time error: Hour must be 12 or less (use 12-hour format)")
+            return None
+        if minutes < 0 or minutes > 59:
+            self.instruction.setText("Time error: Minutes must be between 0 and 59")
+            return None
+        if duration < 0:
+            self.instruction.setText("Time error: Duration cannot be negative")
+            return None
+        if duration > 24:
+            self.instruction.setText("Time error: Duration cannot exceed 24 hours")
+            return None
+        
+        self.instruction.setText("Enter Your routine")
+        return "Valid"
+            
     def get_tasks(self):
         Validity = self.Input_Validation()
         if Validity == "Valid":
@@ -293,10 +312,10 @@ class ResultWindow(QWidget):
             hours = int(task['time'])
             ap = task['AP']
 
-            if ap == 'PM':
+            if ap == 'PM' and hours != 12:
                 hours += 12
-            elif ap == 'AM':
-                pass
+            elif ap == 'AM' and hours == 12:
+                hours = 0
             return hours
 
         self.tasks.sort(key = time_conversion)
