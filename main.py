@@ -197,9 +197,8 @@ class MainWindow(QWidget):
         try:
             hour = int(self.read_time.text())
             minutes = int(self.read_minutes.text())
-            duration = int(self.read_duration.text())
         except ValueError:
-            self.instruction.setText("Error: Time, minute and duration must be numeric values")
+            self.instruction.setText("Error: Time and minute must be numeric values")
             return None
 
         if hour < 1:
@@ -210,12 +209,6 @@ class MainWindow(QWidget):
             return None
         if minutes < 0 or minutes > 59:
             self.instruction.setText("Time error: Minutes must be between 0 and 59")
-            return None
-        if duration < 0:
-            self.instruction.setText("Time error: Duration cannot be negative")
-            return None
-        if duration > 24:
-            self.instruction.setText("Time error: Duration cannot exceed 24 hours")
             return None
         
         self.instruction.setText("Enter Your routine")
