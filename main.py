@@ -185,6 +185,15 @@ class MainWindow(QWidget):
             self.instruction.setText("Error: Enter all the fields before submitting")
             return None
         
+        for dictionary in self.daily_tasks:
+            if self.read_task.text().lower() == str(dictionary['task']).lower():
+                self.instruction.setText(f'DuplicateTask: This task: "{dictionary['task']}" has been submitted already.')
+                return None
+            
+            if self.read_time.text().lower() == str(dictionary['time']).lower() and self.read_minutes.text() == dictionary['minutes'] and self.AP_selection.currentText() == dictionary['AP']:
+                self.instruction.setText(f'DuplicateTime: This time: "{dictionary['time']} : {dictionary['minutes']} {dictionary['AP']}" has been submitted already.')
+                return None
+        
         try:
             hour = int(self.read_time.text())
             minutes = int(self.read_minutes.text())
@@ -310,13 +319,14 @@ class ResultWindow(QWidget):
     def sort_by_time(self):
         def time_conversion(task):
             hours = int(task['time'])
+            minutes = int(task['minutes'])
             ap = task['AP']
 
             if ap == 'PM' and hours != 12:
                 hours += 12
             elif ap == 'AM' and hours == 12:
                 hours = 0
-            return hours
+            return hours * 60 + minutes
 
         self.tasks.sort(key = time_conversion)
 
