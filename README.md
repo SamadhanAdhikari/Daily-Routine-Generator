@@ -1,204 +1,107 @@
 # Daily Routine Generator
 
-A beautiful and intuitive desktop application built with PyQt6 that helps you organize and visualize your daily tasks and routines.
-
-![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
-![PyQt6](https://img.shields.io/badge/PyQt6-6.0%2B-green)
+A PyQt6-based desktop application for creating and managing your daily routine with a modern, visually appealing interface.
 
 ## Features
 
-✨ **Easy Task Entry**: Simple form to add tasks with time and duration  
-📊 **Visual Table Display**: View all your tasks in a clean, organized table  
-🎨 **Modern Dark Theme**: Beautiful dark color scheme with teal and cream accents  
-💾 **Persistent Sessions**: Tasks remain available during your session  
-🔄 **Real-time Updates**: Table updates automatically when you add new tasks  
-🖱️ **Intuitive Interface**: User-friendly design with hover effects and clear navigation
+- **Task Management**: Add tasks with specific start and end times
+- **Time Validation**: Prevents overlapping tasks and validates time inputs
+- **Visual Table Display**: View your daily routine in a sortable, editable table
+- **12-Hour Format**: Easy-to-use AM/PM time selection
+- **Modern UI**: Dark-themed interface with custom styling
+- **Duplicate Detection**: Prevents adding the same task multiple times
+- **Confirmation Dialogs**: Confirms task submission before adding
 
-### Main Window
-The main input window where you enter your daily tasks:
-- Task name (e.g., "Do Math Homework")
-- Start time (e.g., "4 PM")
-- Duration (e.g., "2 Hours")
+## Screenshots
 
-### Results Window
-A table view displaying all your tasks with columns for Task, Time, and Duration.
+The application features two main windows:
+1. **Main Window**: Input interface for adding tasks
+2. **Routine Window**: Table view displaying your organized daily routine
+
+## Requirements
+
+- Python 3.x
+- PyQt6
 
 ## Installation
 
-### Prerequisites
-- Python 3.8 or higher
-- PyQt6
+1. Clone this repository or download the source code
+2. Install the required dependencies:
 
-### Setup
-
-1. **Clone the repository**
-```bash
-git clone https://github.com/SamadhanAdhikari/Daily-Routine-Generator.git
-cd daily-routine-generator
-```
-
-2. **Install dependencies**
 ```bash
 pip install PyQt6
 ```
 
-3. **Run the application**
-```bash
-python main.py
-```
-
 ## Usage
 
-### Adding Tasks
+1. Run the application:
 
-1. Launch the application
-2. Enter your task details:
-   - **Task**: What you need to do (e.g., "Study Python")
-   - **Time**: When you'll start (e.g., "6 PM")
-   - **Duration**: How long it will take (e.g., "2 Hours")
-3. Click **"Submit Tasks"** to add the task to your routine
-4. Repeat for all your daily tasks
-
-### Viewing Your Routine
-
-1. After adding all tasks, click **"Get Routine"**
-2. A new window opens showing your tasks in a table format
-3. The table displays all tasks with their times and durations
-4. You can add more tasks and click "Get Routine" again to update the display
-
-### Tips
-
-- Fill out all three fields before submitting
-- You can add as many tasks as you need
-- The result window updates automatically when you add new tasks
-- Clear task information is displayed in an easy-to-read table format
-
-## Project Structure
-
-```
-daily-routine-generator/
-│
-├── main.py                 # Main application file
-├── README.md              # Project documentation
+```bash
+python daily_routine_generator.py
 ```
 
-## Code Overview
+2. **Adding Tasks**:
+   - Enter a task name in the "Enter Task" field
+   - Set the start time (hour, minutes, AM/PM)
+   - Set the end time (hour, minutes, AM/PM)
+   - Click "Submit Tasks" to add the task
+   - Confirm your submission in the dialog box
 
-### Main Classes
-
-**`MainWindow`**: The primary input window
-- Handles task entry with three input fields
-- Validates input before adding tasks
-- Manages the connection to the results window
-
-**`ResultWindow`**: The results display window
-- Shows tasks in a formatted table
-- Three columns: Task, Time, Duration
-- Updates dynamically when new tasks are added
-
-### Key Methods
-
-- `get_tasks()`: Validates and stores task information
-- `show_ResultWindow()`: Opens or updates the results window
-- `populate_table()`: Fills the table with task data
-- `update_tasks()`: Refreshes the table with new tasks
+3. **Viewing Your Routine**:
+   - Click "Get Routine" to open the routine table window
+   - Tasks are automatically sorted by start time
+   - Double-click any cell to edit (changes are temporary)
 
 ## Color Scheme
 
-The app uses a modern dark theme:
+The application uses a modern dark theme:
+- Background: `#222831`
+- Accent: `#00ADB5` (Teal)
+- Secondary: `#393E46` (Dark Gray)
+- Highlight: `#EBD5AB` (Beige)
 
-| Element | Color | Hex Code |
-|---------|-------|----------|
-| Background | Dark Gray | `#222831` |
-| Headers | Medium Gray | `#393E46` |
-| Accent/Highlights | Teal | `#00ADB5` |
-| Text | Cream | `#EBD5AB` |
-| Buttons | White Smoke | `whitesmoke` |
-
-## Requirements
+## Code Structure
 
 ```
-PyQt6>=6.0.0
+daily_routine_generator.py
+├── MainWindow (QWidget)
+│   ├── Input fields for task and time
+│   ├── Validation methods
+│   └── Task submission logic
+└── ResultWindow (QWidget)
+    ├── Table display
+    ├── Sorting functionality
+    └── Editable cells
 ```
 
-## Contributing
+## Key Methods
 
-Contributions are welcome! Here's how you can help:
+### MainWindow
+- `get_tasks()`: Handles task submission
+- `Input_Validation()`: Validates all user inputs
+- `Confirmation()`: Shows confirmation dialog
+- `show_ResultWindow()`: Opens the routine table
 
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/improvement`)
-3. Make your changes
-4. Commit your changes (`git commit -am 'Add new feature'`)
-5. Push to the branch (`git push origin feature/improvement`)
-6. Create a Pull Request
+### ResultWindow
+- `make_table()`: Populates the table with tasks
+- `sort_by_time()`: Sorts tasks chronologically
 
-### Ideas for Contributions
+## Notes
 
-- Add ability to save routines to file
-- Implement task editing functionality
-- Add task deletion from the table
-- Include time sorting/ordering
-- Add task priority levels
-- Export routine to PDF or Excel
-- Add reminder/notification system
-- Dark/Light theme toggle
-
-## Known Issues
-
-- Tasks are cleared when the application closes (no persistent storage yet)
-- No edit functionality for submitted tasks
-- No task deletion from the table view
+- Changes made in the routine table are **temporary** and will reset when the window is closed
+- The application uses 12-hour time format with AM/PM selection
+- Tasks are automatically sorted by start time in the routine view
 
 ## Future Enhancements
 
-- [ ] Save routines to JSON/database
-- [ ] Load previous routines
-- [ ] Edit tasks after submission
-- [ ] Delete individual tasks
-- [ ] Sort tasks by time
-- [ ] Add task categories/tags
-- [ ] Export to PDF/Excel
-- [ ] Add reminders/notifications
-- [ ] Statistics and analytics
-- [ ] Multi-day routine planning
+Potential improvements for future versions:
+- Save/load routines to/from files
+- Export routine as PDF or image
+- Set reminders/notifications
+- Recurring tasks support
+- Dark/light theme toggle
+- Task categories and color coding
 
-## Troubleshooting
+## License
 
-### Application won't start
-- Ensure Python 3.8+ is installed: `python --version`
-- Verify PyQt6 is installed: `pip show PyQt6`
-- Reinstall PyQt6 if needed: `pip install --upgrade PyQt6`
-
-### Window appears then disappears
-- Check that `self.result_window` is initialized in `__init__`
-- Ensure all parentheses are present in method calls
-
-### Input fields not visible
-- Check that QLineEdit has background-color set in stylesheet
-- Verify color contrast between background and text
-
-## Author
-
-**Samadhan Adhikari**
-- GitHub: [SamadhanAdhikari](https://github.com/SamadhanAdhikari)
-- Email: adhikarisamadhan@gmail.com
-
-## Acknowledgments
-
-- Built with PyQt6
-- Inspired by the need for simple daily routine management
-- Color scheme inspired by modern dark themes
-
-## Version History
-
-### v1.0.0 (Current)
-- Initial release
-- Basic task entry functionality
-- Table view display
-- Modern dark theme UI
-
----
-
-**Made with Python**
-
-*Stay organized, stay productive!* 📅✨
+This project is open source and available for personal and educational use.
