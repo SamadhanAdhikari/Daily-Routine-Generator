@@ -1,6 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QTableWidget, QLabel, QVBoxLayout, QTableWidgetItem, QFileDialog, QMessageBox, QPushButton
 from PyQt6.QtCore import Qt
-from dotenv import load_dotenv
 import os
 import json
 
@@ -15,7 +14,6 @@ class Daily_Routine_Timetable_Output(QWidget):
         self.save_button = QPushButton("Save Routine", self)
         self.load_button = QPushButton("Load Routine", self)
         
-        load_dotenv()
         self.save_directory = os.path.join("MyRoutines")
         
         if not self.save_directory:
