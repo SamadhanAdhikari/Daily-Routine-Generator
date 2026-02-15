@@ -1,7 +1,10 @@
-from PyQt6.QtWidgets import QWidget, QTableWidget, QLabel, QVBoxLayout, QTableWidgetItem
+from PyQt6.QtWidgets import QWidget, QTableWidget, QLabel, QVBoxLayout, QTableWidgetItem, QFileDialog, QMessageBox, QPushButton
 from PyQt6.QtCore import Qt
+from dotenv import load_dotenv
+import os
+import json
 
-class ResultWindow(QWidget):
+class Daily_Routine_Timetable_Output(QWidget):
     def __init__(self, tasks):
         super().__init__()
         self.tasks = tasks
@@ -9,6 +12,18 @@ class ResultWindow(QWidget):
         self.table = QTableWidget()
         self.instruction = QLabel("Double click on boxes to edit routine.", self)
         self.instruction2 = QLabel("(The changes made are not permanent and will be reverted after the window is closed.)", self)
+        self.save_button = QPushButton("Save Routine", self)
+        self.load_button = QPushButton("Load Routine", self)
+        
+        load_dotenv()
+        self.save_directory = os.path.join("MyRoutines")
+        
+        if not self.save_directory:
+            self.save_directory = os.path.join(os.path.expanduser("~"), "Documents", "MyRoutines")
+        
+        if not os.path.exists(self.save_directory):
+            os.makedirs(self.save_directory)
+        
         self.initUI()
 
     def initUI(self):
@@ -19,12 +34,16 @@ class ResultWindow(QWidget):
         self.table.setObjectName("routine_table")
         self.instruction.setObjectName("instruction")
         self.instruction2.setObjectName("instruction2")
+        self.save_button.setObjectName("save_button")
+        self.load_button.setObjectName("load_button")
 
         vbox = QVBoxLayout()
         vbox.addWidget(self.HEADER, alignment = Qt.AlignmentFlag.AlignCenter)
         vbox.addWidget(self.instruction, alignment = Qt.AlignmentFlag.AlignCenter)
         vbox.addWidget(self.instruction2, alignment = Qt.AlignmentFlag.AlignCenter)
         vbox.addWidget(self.table)
+        vbox.addWidget(self.save_button)
+        vbox.addWidget(self.load_button)
         self.setLayout(vbox)
         
         self.table.setColumnCount(3) 
@@ -35,55 +54,21 @@ class ResultWindow(QWidget):
         self.table.setColumnWidth(2, 260)
 
         self.make_table()
-        
-        self.setStyleSheet("""
-            QWidget {
-                background-color: #222831;
-            }
 
-            QLabel#HEADER {
-                font-size: 50px;
-                font-family: Bold Font;
-                font-weight: Bold;
-                background-color: #393E46;
-                padding: 20px;
-                border-radius: 20px;
-                margin-bottom: 20px;
-                color: #EBD5AB;
-            }
+        self.save_button.clicked.connect(self.save_routine)
+        self.load_button.clicked.connect(self.load_routine)
 
-            QTableWidget#routine_table {
-                background-color: #393E46;
-                gridline-color: #00ADB5;
-                font-size: 18px;
-            }
+        self.Apply_CSS()
 
-            QTableWidget#routine_table::item {
-                padding: 10px;
-                color: #EBD5AB;
-            }
-
-            QHeaderView::section {
-                background-color: #00ADB5;
-                color: #222831;
-                padding: 10px;
-                font-weight: bold;
-                font-size: 20px;
-                border: none;
-            }
-
-            QLabel#instruction {
-                color: #EBD5AB;
-                font-family: Calibri;
-                font-size: 20px;
-            }
-                           
-            QLabel#instruction2 {
-                color: #EBD5AB;
-                font-family: Calibri;
-                font-size: 20px;
-            }
-        """)
+    def Apply_CSS(self):
+        try:
+            with open("style.css", "r", encoding="utf-8") as file:
+                css_content = file.read()
+                self.setStyleSheet(css_content)
+        except FileNotFoundError:
+            QMessageBox.warning(self, "⚠ Style file not found", "using defaults")
+        except Exception as error:
+            QMessageBox.warning(self, "✗ Error loading stylesheet", error)
 
     def sort_by_time(self):
         def time_conversion(task):
@@ -110,4 +95,44 @@ class ResultWindow(QWidget):
             self.table.setItem(index, 2, QTableWidgetItem(f"{task['end_time']} : {task['end_minutes']} {task['end_AP']}"))
 
             self.table.setRowHeight(index, 50)
-            print(self.tasks)
+
+    def save_routine(self):
+        if not self.tasks:
+            QMessageBox.warning(self, "No Tasks", "No tasks to save!")
+            return
+
+        filename, _ = QFileDialog.getSaveFileName(
+            self, 
+            "Save Routine", 
+            self.save_directory,
+            "JSON Files (*.json);;All Files (*)"
+        )
+
+        if filename:
+            try:
+                with open(filename, 'w') as f:
+                    json.dump(self.tasks, f, indent=4)
+                QMessageBox.information(self, "Success", "Routine saved successfully!")
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Failed to save file:\n{str(e)}")
+
+    def load_routine(self):
+        filename, _ = QFileDialog.getOpenFileName(
+            self, 
+            "Load Routine", 
+            self.save_directory,
+            "JSON Files (*.json);;All Files (*)"
+        )
+        
+        if filename:
+            try:
+                with open(filename, 'r') as f:
+                    self.tasks = json.load(f)
+                self.make_table()
+                QMessageBox.information(self, "Success", f"Loaded {len(self.tasks)} tasks!")
+            except FileNotFoundError:
+                QMessageBox.critical(self, "Error", "File not found!")
+            except json.JSONDecodeError:
+                QMessageBox.critical(self, "Error", "Invalid JSON file!")
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Failed to load file:\n{str(e)}")

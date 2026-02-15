@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QLineEdit, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QComboBox, QMessageBox
 from PyQt6.QtCore import Qt
-from Daily_Routine_Generator_Routine_Output import ResultWindow
+from Daily_Routine_Generator_Routine_Output import Daily_Routine_Timetable_Output
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -46,174 +46,6 @@ class MainWindow(QWidget):
         self.read_time2.setObjectName("read_time2")
         self.read_minutes2.setObjectName("read_minutes2")
         self.AP_selection2.setObjectName("AP_selection2")
-
-        self.setStyleSheet("""
-            QWidget {
-                background-color: #222831;
-            }
-
-            QLabel#HEADER {
-                font-size: 50px;
-                font-family: Bold Font;
-                font-weight: Bold;
-                background-color: #393E46;
-                padding: 20px;
-                border-radius: 20px;
-                margin-bottom: 10px;
-                color: #EBD5AB;
-            }
-                           
-            QLabel#start_time_label {
-                           font-size: 20px;
-                           color: #EBD5AB;
-                           }
-
-            QLabel#end_time_label {
-                           font-size: 20px;
-                           color: #EBD5AB;
-                           }
-
-            QLineEdit#read_task {
-                padding: 10px;
-                border-radius: 15px;
-                font-size: 25px;
-                margin-bottom: 15px;
-                background-color: #00ADB5;
-                color: #222831;
-            }
-
-            QLineEdit#read_time {
-                padding: 10px;
-                border-radius: 15px;
-                font-size: 25px;
-                margin-bottom: 15px;
-                background-color: #00ADB5;
-                color: #222831;
-            }
-                           
-            QLineEdit#read_minutes {
-                padding: 10px;
-                border-radius: 15px;
-                font-size: 25px;
-                margin-bottom: 25px;
-                margin-top: 10px;
-                background-color: #00ADB5;
-                color: #222831;
-            }
-                           
-            QComboBox#AP_selection {
-                padding: 10px;
-                padding-right: 40px;
-                border-radius: 15px;
-                font-size: 25px;
-                margin-bottom: 25px;
-                margin-top: 10px;
-                background-color: #00ADB5;
-                color: #222831;
-            }
-                           
-            QComboBox#AP_selection::drop-down {
-                           border: none;
-                           width: 30px;
-                           }
-
-            QComboBox#AP_selection::down-arrow {
-                           image: none;
-                           border: none;
-                           border-left: 5px solid;
-                           border-right: 5px solid;
-                           border-top: 8px solid #222831;
-                           }
-
-            QComboBox#AP_selection  QAbstractItemView {
-                           background-color: #00ADB5;
-                           color: #222831;
-                           }
-
-            QLineEdit#read_time2 {
-                padding: 10px;
-                border-radius: 15px;
-                font-size: 25px;
-                margin-bottom: 15px;
-                background-color: #00ADB5;
-                color: #222831;
-            }
-                           
-            QLineEdit#read_minutes2 {
-                padding: 10px;
-                border-radius: 15px;
-                font-size: 25px;
-                margin-bottom: 25px;
-                margin-top: 10px;
-                background-color: #00ADB5;
-                color: #222831;
-            }
-                           
-            QComboBox#AP_selection2 {
-                padding: 10px;
-                padding-right: 40px;
-                border-radius: 15px;
-                font-size: 25px;
-                margin-bottom: 25px;
-                margin-top: 10px;
-                background-color: #00ADB5;
-                color: #222831;
-            }
-                           
-            QComboBox#AP_selection2::drop-down {
-                           border: none;
-                           width: 30px;
-                           }
-
-            QComboBox#AP_selection2::down-arrow {
-                           image: none;
-                           border: none;
-                           border-left: 5px solid;
-                           border-right: 5px solid;
-                           border-top: 8px solid #222831;
-                           }
-
-            QComboBox#AP_selection2  QAbstractItemView {
-                           background-color: #00ADB5;
-                           color: #222831;
-                           }
-
-
-            QPushButton#submit_button {
-                padding: 10px;
-                background-color: whitesmoke;
-                color: #00ADB5;
-                border-radius: 25px;
-                font-size: 40px;
-                font-family: Times New Roman;
-            }
-
-            QPushButton#submit_button:hover {
-                background-color: #d3d3d3;
-            }
-
-            QLabel#instruction {
-                margin-bottom: 10px;
-                color: #EBD5AB;
-                font-family: Calibri;
-                font-size: 30px;
-            }
-
-            QPushButton#routine_button {
-                padding: 15px;
-                margin-top: 10px;
-                background-color: #393E46;
-                color: #EBD5AB;
-                font-family: Calibri;
-                font-size: 30px;
-                border-radius: 15px;
-                font-weight: Bold;
-            }
-
-            QPushButton#routine_button:hover {
-                background-color: #00ADB5;
-            }
-        """)
         
         input_start_time_horizontal = QHBoxLayout()
         input_start_time_horizontal.addWidget(self.read_time)
@@ -239,6 +71,18 @@ class MainWindow(QWidget):
 
         self.submit_button.clicked.connect(self.get_tasks)
         self.routine_button.clicked.connect(self.show_ResultWindow)
+
+        self.Apply_CSS()
+
+    def Apply_CSS(self):
+        try:
+            with open("style.css", "r", encoding="utf-8") as file:
+                css_content = file.read()
+                self.setStyleSheet(css_content)
+        except FileNotFoundError:
+            self.instruction.setText("⚠ Style file not found - using defaults")
+        except Exception as e:
+            self.instruction.setText(f"✗ Error loading stylesheet: {e}")
 
     def Confirmation(self):
         msg = QMessageBox()
@@ -322,5 +166,5 @@ class MainWindow(QWidget):
                 self.read_minutes2.clear()
 
     def show_ResultWindow(self):
-        self.result_window = ResultWindow(self.daily_tasks)
+        self.result_window = Daily_Routine_Timetable_Output(self.daily_tasks)
         self.result_window.show()
