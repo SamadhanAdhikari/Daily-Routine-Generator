@@ -64,14 +64,14 @@ The application uses a modern dark theme:
 
 ```
 daily_routine_generator.py
-â”œâ”€â”€ MainWindow (QWidget)
-â”‚   â”œâ”€â”€ Input fields for task and time
-â”‚   â”œâ”€â”€ Validation methods
-â”‚   â””â”€â”€ Task submission logic
-â””â”€â”€ ResultWindow (QWidget)
-    â”œâ”€â”€ Table display
-    â”œâ”€â”€ Sorting functionality
-    â””â”€â”€ Editable cells
+--------- MainWindow (QWidget)
+   |--------- Input fields for task and time
+   |--------- Validation methods
+   |--------- Task submission logic
+--------- ResultWindow (QWidget)
+   |--------- Table display
+   |--------- Sorting functionality
+   |--------- Editable cells
 ```
 
 ## Key Methods
