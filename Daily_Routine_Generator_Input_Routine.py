@@ -102,22 +102,10 @@ class MainWindow(QWidget):
                 h = 0
             return h * 60 + minutes
         
-        for dictionary in self.daily_tasks:
-            if self.read_task.text().lower() == str(dictionary['task']).lower():
-                self.instruction.setText(f'DuplicateTask: This task: "{dictionary['task']}" has been submitted already.')
-                return None
-            
-            existing_start = convert_to_minutes(dictionary['time'], dictionary['minutes'], dictionary['AP'])
-            existing_end = convert_to_minutes(dictionary['end_time'], dictionary['end_minutes'], dictionary['end_AP'])
-        
-            if (new_start < existing_end and new_end > existing_start):
-                self.instruction.setText(f'Time overlap: This task overlaps with "{dictionary['task']}"')
-                return None
-
         if not (self.read_task.text() and self.read_time.text() and self.read_minutes.text() and self.read_time2.text() and self.read_minutes2.text()):
             self.instruction.setText("Error: Enter all the fields before submitting")
             return None
-        
+
         try:
             hour = int(self.read_time.text())
             minutes = int(self.read_minutes.text())
@@ -139,6 +127,18 @@ class MainWindow(QWidget):
         
         new_start = convert_to_minutes(hour, minutes, self.AP_selection.currentText())
         new_end = convert_to_minutes(hour2, minutes2, self.AP_selection2.currentText())
+        
+        for dictionary in self.daily_tasks:
+            if self.read_task.text().lower() == str(dictionary['task']).lower():
+                self.instruction.setText(f'DuplicateTask: This task: "{dictionary["task"]}" has been submitted already.')
+                return None
+            
+            existing_start = convert_to_minutes(dictionary['time'], dictionary['minutes'], dictionary['AP'])
+            existing_end = convert_to_minutes(dictionary['end_time'], dictionary['end_minutes'], dictionary['end_AP'])
+        
+            if (new_start < existing_end and new_end > existing_start):
+                self.instruction.setText(f'Time overlap: This task overlaps with "{dictionary["task"]}"')
+                return None
         
         if new_end <= new_start:
             self.instruction.setText("Time error: End time must be after start time")
